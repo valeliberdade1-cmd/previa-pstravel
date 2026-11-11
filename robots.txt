@@ -1,0 +1,3 @@
+# Previa, nao e o site oficial.
+User-agent: *
+Disallow: /

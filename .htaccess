@@ -1,0 +1,62 @@
+# PS Travel: site estático (Astro). Gerado a partir de public/.htaccess no repositório.
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Sempre HTTPS e sem www
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^(.*)$ https://pstravel.com.ar/$1 [R=301,L]
+
+# Nenhum PHP neste site: qualquer .php (restos do WordPress, robôs de ataque) dá 404
+RewriteRule \.php$ - [R=404,L,NC]
+RewriteRule ^(wp-admin|wp-content|wp-includes)(/|$) - [R=404,L,NC]
+
+# Links do site antigo (WordPress) -> páginas novas
+RewriteRule ^trip/glaciar-perito-moreno-pasarela/?$ /excursiones/pasarelas-perito-moreno/ [R=301,L,NC]
+RewriteRule ^trip/glaciar-perito-moreno-minitrekking/?$ /excursiones/minitrekking-perito-moreno/ [R=301,L,NC]
+RewriteRule ^trip/navegacion-1-hora/?$ /excursiones/safari-nautico/ [R=301,L,NC]
+RewriteRule ^trip/experiencia-glaciares-gourmet/?$ /excursiones/glaciares-gourmet/ [R=301,L,NC]
+RewriteRule ^trip/traslado-desde-y-hacia-el-aeropuerto/?$ /excursiones/traslado-aeropuerto/ [R=301,L,NC]
+RewriteRule ^trip/cerro-frias-cabalgatas-trekking-4x4-tirolesa/?$ /categorias/aventura/ [R=301,L,NC]
+RewriteRule ^trip/torres-del-paine-fullen-overland-4x4/?$ /excursiones/torres-del-paine-overland/ [R=301,L,NC]
+RewriteRule ^trip/(nativo-experience|balcones-de-calafate|torres-del-paine-full-day|todo-glaciares|estancia-nibepo-aike|safari-azul|safari-nautico)/?$ /excursiones/$1/ [R=301,L,NC]
+RewriteRule ^trip(/.*)?$ /excursiones/ [R=301,L,NC]
+
+RewriteRule ^activities/(cabalgata)/?$ /excursiones/cerro-frias-cabalgata/ [R=301,L,NC]
+RewriteRule ^activities/(navegacion)/?$ /categorias/navegaciones/ [R=301,L,NC]
+RewriteRule ^activities/(caminata-en-glaciar)/?$ /categorias/perito-moreno/ [R=301,L,NC]
+RewriteRule ^activities/(4x4|tirolesa|trekking|hiking)/?$ /categorias/aventura/ [R=301,L,NC]
+RewriteRule ^activities/(traslado)/?$ /categorias/traslados/ [R=301,L,NC]
+RewriteRule ^activities/(estancia)/?$ /categorias/estancias/ [R=301,L,NC]
+RewriteRule ^destinations/torres-del-paine/?$ /categorias/torres-del-paine/ [R=301,L,NC]
+# Páginas novas que saíram ou mudaram de nome (19/11/2026)
+RewriteRule ^excursiones/austral-sailing-[^/]*/?$ /excursiones/ [R=301,L,NC]
+RewriteRule ^en/tours/austral-sailing-[^/]*/?$ /en/tours/ [R=301,L,NC]
+RewriteRule ^categorias/expediciones/?$ /excursiones/ [R=301,L,NC]
+RewriteRule ^en/categories/expeditions/?$ /en/tours/ [R=301,L,NC]
+RewriteRule ^en/categories/expediciones/?$ /en/tours/ [R=301,L,NC]
+RewriteRule ^excursiones/traslado-el-chalten/?$ /excursiones/el-chalten-full-day/ [R=301,L,NC]
+RewriteRule ^en/tours/traslado-el-chalten/?$ /en/tours/el-chalten-full-day/ [R=301,L,NC]
+
+RewriteRule ^(activities|destinations|actividades|destinos|todos-los-viajes)(/.*)?$ /excursiones/ [R=301,L,NC]
+RewriteRule ^(quienes-somos|our-teams-2)/?$ /nosotros/ [R=301,L,NC]
+RewriteRule ^(contacto|faqs-2|blog|wishlist|gtranslate|my-account[^/]*|checkout[^/]*|thank-you[^/]*|enquiry-thank-you-page[^/]*|travelers-information|terms-and-conditions[^/]*|wp-travel-engine-[^/]*|7046-2)/?$ / [R=301,L,NC]
+
+# Cache: fotos e arquivos com hash por 1 ano; páginas sempre revalidadas
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
